@@ -18,7 +18,11 @@ jobs:
              ls -a
        - name: SSH into ec2
          run: |
-            ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ec2-key.pem
+            chmod 600 ec2-key.pem
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+            ssh -i ~/.ssh/ec2-key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
             ls -a
             EOF
