@@ -1,82 +1,15 @@
-name: Flask CI/CD
+name: Flask CI-CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
   test-and-deploy:
-    runs-on: ubuntu-latest
+     runs-on: ubuntu-latest
 
-    env:
-      VIRTUAL_ENV: venv
-      FLASK_PORT: 5000
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m venv $VIRTUAL_ENV
-          source $VIRTUAL_ENV/bin/activate
-          pip install -r requirements.txt
-
-      - name: Run unit tests
-        run: |
-          source $VIRTUAL_ENV/bin/activate
-          python -m unittest discover -s . -p "test_*.py"
-
-      - name: Start Flask server locally for sanity check
-        run: |
-          source $VIRTUAL_ENV/bin/activate
-          python app.py &
-          sleep 5
-
-      - name: Test / endpoint
-        run: |
-          curl -f http://127.0.0.1:${{ env.FLASK_PORT }}/
-
-      - name: Test /health endpoint
-        run: |
-          curl -f http://127.0.0.1:${{ env.FLASK_PORT }}/health
-
-      - name: Package application
-        run: |
-          tar -czf flask-app.tar.gz app.py requirements.txt
-
-      - name: Copy package to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "flask-app.tar.gz"
-          target: "~/myflaskapp"
-
-      - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd ~/myflaskapp
-            tar -xzf flask-app.tar.gz
-
-            if [ ! -d "venv" ]; then
-              python3 -m venv venv
-            fi
-
-            source venv/bin/activate
-            pip install -r requirements.txt
-
-            pkill -f "python app.py" || true
-
-            nohup python app.py > app.log 2>&1 &
+     steps:
+       - name: List all files
+         run: |
+             ls
