@@ -16,3 +16,9 @@ jobs:
        - name: List all files
          run: |
              ls -a
+       - name: SSH into ec2
+         run: |
+            ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            ls -a
+            EOF
