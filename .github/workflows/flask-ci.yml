@@ -49,6 +49,12 @@ jobs:
           python app.py &
           sleep 5
 
+      - name: Show app.log contents
+        run: |
+          echo "---- app.log ----"
+          cat app.log || echo "app.log not found"
+
+
       # 6. Call "/" endpoint
       - name: Check home endpoint
         run: |
