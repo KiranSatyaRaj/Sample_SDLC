@@ -23,8 +23,7 @@ jobs:
             echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ec2-key.pem
             chmod 600 ~/.ssh/ec2-key.pem
             ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-            scp -i ~/.ssh/ec2-key.pem app.py requirements.txt build.sh \
-            $ {{ secrets.SSH_USER }}@{{ secrets.SSH_HOST }}:~/myflaskapp/
+            scp -i ~/.ssh/ec2-key.pem app.py requirements.txt build.sh ${{ secrets.SSH_USER }}@{{ secrets.SSH_HOST }}:~/myflaskapp/
             ssh -i ~/.ssh/ec2-key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
             echo "I'm inside aws ec2 instance. WOOHOO!!!!"
