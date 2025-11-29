@@ -28,5 +28,9 @@ jobs:
             set -e
             echo "I'm inside aws ec2 instance. WOOHOO!!!!"
             echo "export FLASK_PORT=5000" >> ~/.bashrc
-            ls -a myflaskapp/
+            cd  ~/myflaskapp/
+            chmod +x build.sh
+            ./build.sh
+            pkill -f "python app.py" || true
+            nohup venv/bin/python app.py > app.log 2>&1 &
             EOF
